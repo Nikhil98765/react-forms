@@ -7,6 +7,9 @@ export default function Login() {
     password: "",
   });
 
+  // * Handling form input validation on key stroke. Won't be a good solution since errors will be shown too early.
+  const emailIsInvalid = enteredValues.email !== '' && !enteredValues.email.includes('@');
+
   function handleSubmission(event) {
     // * Note: Need to add prevent default to prevent reloading of page and making http call when form submits.
     event.preventDefault();
@@ -39,6 +42,9 @@ export default function Login() {
             value={enteredValues.email}
             onChange={(event) => handleInputChange("email", event.target.value)}
           />
+          <div className="control-error">
+            {emailIsInvalid && <p>Please enter a valid email address.</p>}
+          </div>
         </div>
 
         <div className="control no-margin">
