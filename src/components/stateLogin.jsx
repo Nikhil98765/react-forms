@@ -1,16 +1,23 @@
-import { useRef } from "react";
+import { useState } from "react";
 
 export default function Login() {
-
-  const emailRef = useRef();
-  const passwordRef = useRef();
-
+  // * Extracting form data through state.
+  const [enteredValues, setEnteredValues] = useState({
+    email: "",
+    password: "",
+  });
 
   function handleSubmission(event) {
     // * Note: Need to add prevent default to prevent reloading of page and making http call when form submits.
     event.preventDefault();
-    console.log(`Email: ${emailRef.current.value} && password: ${passwordRef.current.value}`);
-    // ! resetting form controls can be achieved through useRef way but its not recommended to do it and useRef is only for readonly.
+    console.log(enteredValues);
+  }
+
+  function handleInputChange(identifier, value) {
+    setEnteredValues((prevValues) => ({
+      ...prevValues,
+      [identifier]: value,
+    }));
   }
 
   return (
@@ -24,7 +31,8 @@ export default function Login() {
             id="email"
             type="email"
             name="email"
-            ref={emailRef}
+            value={enteredValues.email}
+            onChange={(event) => handleInputChange("email", event.target.value)}
           />
         </div>
 
@@ -34,7 +42,10 @@ export default function Login() {
             id="password"
             type="password"
             name="password"
-            ref={passwordRef}
+            value={enteredValues.password}
+            onChange={(event) =>
+              handleInputChange("password", event.target.value)
+            }
           />
         </div>
       </div>
