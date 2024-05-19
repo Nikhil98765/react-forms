@@ -1,3 +1,5 @@
+
+// * Handled form data using native formData constructor.
 export default function Signup() {
 
   function handleSubmission(event) {
@@ -9,7 +11,7 @@ export default function Signup() {
     const data = Object.fromEntries(formData.entries());
     data.acquisition = acquisitionChannel;
     console.log("🚀 ~ handleSubmission ~ data:", data);
-
+    
   }
 
   return (
@@ -99,6 +101,7 @@ export default function Signup() {
       </div>
 
       <p className="form-actions">
+        {/* one way of doing resetting form is to have button inside form with type reset */}
         <button type="reset" className="button button-flat">
           Reset
         </button>

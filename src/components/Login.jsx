@@ -1,5 +1,6 @@
 import { useRef } from "react";
 
+// * Handled form data using useRef way.
 export default function Login() {
 
   const emailRef = useRef();

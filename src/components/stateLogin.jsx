@@ -11,6 +11,11 @@ export default function Login() {
     // * Note: Need to add prevent default to prevent reloading of page and making http call when form submits.
     event.preventDefault();
     console.log(enteredValues);
+    // * Resetting form
+    setEnteredValues({
+      email: "",
+      password: "",
+    });
   }
 
   function handleInputChange(identifier, value) {
