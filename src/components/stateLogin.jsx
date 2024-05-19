@@ -7,8 +7,13 @@ export default function Login() {
     password: "",
   });
 
-  // * Handling form input validation on key stroke. Won't be a good solution since errors will be shown too early.
-  const emailIsInvalid = enteredValues.email !== '' && !enteredValues.email.includes('@');
+  const [didEdit, setDidEdit] = useState({
+    email: false,
+    password: false
+  });
+
+  // * Handling form input validation on blur will show validation message too long. To handle this issue, we can remove the error on input change and validate it on blur.
+  const emailIsInvalid = didEdit.email && !enteredValues.email.includes('@');
 
   function handleSubmission(event) {
     // * Note: Need to add prevent default to prevent reloading of page and making http call when form submits.
@@ -26,6 +31,17 @@ export default function Login() {
       ...prevValues,
       [identifier]: value,
     }));
+    setDidEdit((prevValues) => ({
+      ...prevValues,
+      [identifier]: false,
+    }));
+  }
+
+  function handleInputBlur(identifier) {
+    setDidEdit((prevValues) => ({
+      ...prevValues,
+      [identifier]: true
+    }))
   }
 
   return (
@@ -41,6 +57,7 @@ export default function Login() {
             name="email"
             value={enteredValues.email}
             onChange={(event) => handleInputChange("email", event.target.value)}
+            onBlur={() => handleInputBlur("email")}
           />
           <div className="control-error">
             {emailIsInvalid && <p>Please enter a valid email address.</p>}
@@ -57,6 +74,7 @@ export default function Login() {
             onChange={(event) =>
               handleInputChange("password", event.target.value)
             }
+            onBlur={() => handleInputBlur("password")}
           />
         </div>
       </div>
