@@ -1,55 +1,40 @@
-import { useState } from "react";
 
 import { Input } from './Input.jsx';
+import {hasMinLength, isEmail} from "../util/validation.js";
+import { useInput } from "../hooks/useInput.js";
 
+// * Extracting form data through state.
 export default function Login() {
-  // * Extracting form data through state.
-  const [enteredValues, setEnteredValues] = useState({
-    email: "",
-    password: "",
-  });
+  const { value: emailValue, handleInputChange: handleEmailChange, handleInputBlur: handleEmailBlur, hasError: emailHasError } = useInput('', (value) => isEmail(value));
 
-  const [didEdit, setDidEdit] = useState({
-    email: false,
-    password: false
-  });
+  const {
+    value: passwordValue,
+    handleInputChange: handlePasswordChange,
+    handleInputBlur: handlePasswordBlur,
+    hasError: passwordHasError,
+  } = useInput("", (value) => hasMinLength(value, 6));
 
   // * Handling form input validation on blur will show validation message too long. To handle this issue, we can remove the error on input change and validate it on blur.
-  const emailIsInvalid = didEdit.email && !enteredValues.email.includes('@');
-  const passwordIsInvalid = didEdit.password && enteredValues.password.trim().length < 6;
 
   function handleSubmission(event) {
     // * Note: Need to add prevent default to prevent reloading of page and making http call when form submits.
     event.preventDefault();
-    console.log(enteredValues);
+    if (emailHasError || passwordHasError) {
+      return;
+    }
+
+    console.log(`Email: ${emailValue} && Password: ${passwordValue}`);
     // * Resetting form
-    setEnteredValues({
-      email: "",
-      password: "",
-    });
-    setDidEdit({
-      email: false,
-      password: false
-    });
+    // setEnteredValues({
+    //   email: "",
+    //   password: "",
+    // });
+    // setDidEdit({
+    //   email: false,
+    //   password: false
+    // });
   }
 
-  function handleInputChange(identifier, value) {
-    setEnteredValues((prevValues) => ({
-      ...prevValues,
-      [identifier]: value,
-    }));
-    setDidEdit((prevValues) => ({
-      ...prevValues,
-      [identifier]: false,
-    }));
-  }
-
-  function handleInputBlur(identifier) {
-    setDidEdit((prevValues) => ({
-      ...prevValues,
-      [identifier]: true
-    }))
-  }
 
   return (
     <form onSubmit={handleSubmission}>
@@ -61,10 +46,10 @@ export default function Login() {
           id="email"
           type="email"
           name="email"
-          value={enteredValues.email}
-          onChange={(event) => handleInputChange("email", event.target.value)}
-          onBlur={() => handleInputBlur("email")}
-          error={emailIsInvalid && "Please enter a valid email!"}
+          value={emailValue}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          error={emailHasError && "Please enter a valid email!"}
         ></Input>
 
         <Input
@@ -72,12 +57,10 @@ export default function Login() {
           id="password"
           type="password"
           name="password"
-          value={enteredValues.password}
-          onChange={(event) =>
-            handleInputChange("password", event.target.value)
-          }
-          onBlur={() => handleInputBlur("password")}
-          error={passwordIsInvalid && "Please enter a valid password!"}
+          value={passwordValue}
+          onChange={handlePasswordChange}
+          onBlur={handlePasswordBlur}
+          error={passwordHasError && "Please enter a valid password!"}
         ></Input>
       </div>
 
